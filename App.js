@@ -1,21 +1,19 @@
 
 import { StyleSheet, Text, View } from 'react-native';
-import Home from './Src/Screens/Home';
-import StackNavigation from './Src/Navigation/StackNavigation';
+import Home from './src/screens/Home';
+import StackNavigation from './src/navigation/StackNavigation';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      
-    </View>
+      <StackNavigation />
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+// });

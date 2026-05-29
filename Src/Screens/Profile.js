@@ -1,9 +1,11 @@
-import  {view, text} from 'react-native';
+import  {View, Text} from 'react-native';
 function Profile(){
     return(
-        <view>
+        <View>
 
-<text> Hola, soy el perfil</text>
-        </view>
+<Text> Hola, soy el perfil</Text>
+        </View>
     )
 }   
+
+export default Profile

@@ -1,14 +1,20 @@
 import {NavigationContainer, StackRouter} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Login from '../Screens/Login'
-import Register from '../Screens/Register'
+import Login from '../screens/Login'
+import Register from '../screens/Register'
 import TabNavigation from './TabsNavigation';
+
+const Stack = createNativeStackNavigator();
 
 function StackNavigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen 
+        name= "TabsNavigation"
+        component={TabNavigation}
+        options={{headerShown: false}}/>
         <Stack.Screen 
         name="Login" 
         component={Login}
@@ -16,10 +22,6 @@ function StackNavigation() {
         <Stack.Screen 
         name= "Register" 
         component={Register}
-        options={{headerShown: false}}/>
-        <Stack.Sreen 
-        name= "TabsNavigation"
-        component={TabNavigation}
         options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>

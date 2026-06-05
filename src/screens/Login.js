@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet, Image } from "react-native";
 import { auth } from "../firebase/Config";
 
@@ -6,6 +6,14 @@ function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [loginError, setLoginError] = useState("");
+
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        navigation.navigate('TabsNavigation');
+      }
+    });
+  }, []);
 
   function login(email, pass) {
     setLoginError("");

@@ -12,8 +12,8 @@ function Register(props){
         .then((response)=>{
             db.collection('users').add({
                 userName:userName ,
-                password: password,
                 email: email,
+                createdAt: Date.now(),
             })
             .then(props.navigation.navigate('Login'))
         })
@@ -44,6 +44,9 @@ function Register(props){
             value={password}/>
             <Pressable style={styles.button} onPress={()=> onSubmit()}>
                 <Text style={styles.buttonText}>Register</Text>
+            </Pressable>
+            <Pressable onPress={()=> navigation.navigate("Login")}>
+                <Text style={styles.link}>Volver a Login</Text>
             </Pressable>
         </View>
     );
@@ -89,6 +92,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
+      link: {
+    marginTop: 20,
+    textAlign: "center",
+    color: "blue",
+  },
 });
 
 export default Register

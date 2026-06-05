@@ -1,12 +1,12 @@
-import { View, Text } from "react-native-web"
+import { useState } from "react";
+import { View, Text, TextInput, Pressable } from "react-native";
 import { db, auth } from "../firebase/Config";
-import { Pressable } from "react-native";
 
-function Register(email, password){
+function Register(props){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [userName, setUserName] = useState("");
-    
+
     function onSubmit(){
         auth.createUserWithEmailAndPassword(email, password)
         .then((response)=>{
@@ -25,16 +25,16 @@ function Register(email, password){
     return(
         <View>
             <Text>Register</Text>
-            <TextInput style={}
-            keyboardType='email.adress'
+            <TextInput
+            keyboardType='email-address'
             placeholder='Email'
             onChangeText={ text => setEmail(text)}
             value={email}/>
-            <TextInput style={}
+            <TextInput
             placeholder='User name'
             onChangeText={ text => setUserName(text)}
             value={userName}/>
-            <TextInput style={}
+            <TextInput
             placeholder='Password'
             secureTextEntry={true}
             onChangeText={ text => setPassword(text)}
@@ -46,4 +46,4 @@ function Register(email, password){
     );
 }
 
-export default Register 
+export default Register

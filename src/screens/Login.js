@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
+import { View, Text, TextInput, Pressable, StyleSheet, Image } from "react-native";
 import { auth } from "../firebase/Config";
 
 function Login({ navigation }) {
@@ -28,7 +28,8 @@ function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Image source={require('../../assets/DHboxd.png')} style={styles.logo} />
+      <Text style={styles.title}>Iniciar sesión</Text>
 
       <TextInput
         style={styles.input}
@@ -66,11 +67,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#fff",
   },
+  logo: {
+    width: 180,
+    height: 55,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
   title: {
-    fontSize: 32,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 30,
     textAlign: "center",
+    color: "#444",
   },
   input: {
     borderWidth: 1,

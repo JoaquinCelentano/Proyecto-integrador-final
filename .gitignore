@@ -40,4 +40,8 @@ yarn-error.*
 /ios
 /android
 
+# other stuff (fede usa un IDE que por default viene ./claude)
 .idea/
+consigna/
+.claude/
+slides/

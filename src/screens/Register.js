@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
+import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
 import { db, auth } from "../firebase/Config";
 
 function Register(props){
@@ -23,27 +23,72 @@ function Register(props){
     }
 
     return(
-        <View>
-            <Text>Register</Text>
+        <View style={styles.container}>
+            <Text style={styles.title}>Register</Text>
             <TextInput
+            style={styles.input}
             keyboardType='email-address'
             placeholder='Email'
             onChangeText={ text => setEmail(text)}
             value={email}/>
             <TextInput
+            style={styles.input}
             placeholder='User name'
             onChangeText={ text => setUserName(text)}
             value={userName}/>
             <TextInput
+            style={styles.input}
             placeholder='Password'
             secureTextEntry={true}
             onChangeText={ text => setPassword(text)}
             value={password}/>
-            <Pressable onPress={()=> onSubmit()}>
-                <Text>Register</Text>
+            <Pressable style={styles.button} onPress={()=> onSubmit()}>
+                <Text style={styles.buttonText}>Register</Text>
             </Pressable>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f9f9f9',
+        padding: 24,
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: '700',
+        color: '#111',
+        marginBottom: 32,
+    },
+    input: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#e0e0e0',
+        borderRadius: 10,
+        paddingHorizontal: 16,
+        marginBottom: 14,
+        fontSize: 15,
+        color: '#111',
+    },
+    button: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#111',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 8,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+});
 
 export default Register

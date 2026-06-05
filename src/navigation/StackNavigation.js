@@ -11,17 +11,17 @@ function StackNavigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen 
-        name= "TabsNavigation"
-        component={TabNavigation}
-        options={{headerShown: false}}/>
-        <Stack.Screen 
-        name="Login" 
+        <Stack.Screen
+        name="Login"
         component={Login}
         options={{headerShown: false}}/>
-        <Stack.Screen 
-        name= "Register" 
+        <Stack.Screen
+        name="Register"
         component={Register}
+        options={{headerShown: false}}/>
+        <Stack.Screen
+        name="TabsNavigation"
+        component={TabNavigation}
         options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>

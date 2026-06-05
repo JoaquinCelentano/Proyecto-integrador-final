@@ -1,5 +1,5 @@
 import { View, Text } from "react-native-web"
-import { auth } from "../firebase/Config";
+import { db, auth } from "../firebase/Config";
 import { Pressable } from "react-native";
 
 function Register(email, password){
@@ -10,7 +10,12 @@ function Register(email, password){
     function onSubmit(){
         auth.createUserWithEmailAndPassword(email, password)
         .then((response)=>{
-            props.navigation.navigate('Login')
+            db.collection('users').add({
+                userName:userName ,
+                password: password,
+                email: email,
+            })
+            .then(props.navigation.navigate('Login'))
         })
         .catch(error => {
             setLoginError('Credenciales invalidas')

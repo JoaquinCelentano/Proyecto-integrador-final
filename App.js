@@ -1,9 +1,7 @@
 import StackNavigation from './src/navigation/StackNavigation';
 
 export default function App() {
-  return (
-      <StackNavigation />
-  );
+  return <StackNavigation />;
 }
 
 // const styles = StyleSheet.create({

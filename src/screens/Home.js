@@ -60,6 +60,10 @@ function Home({ navigation }) {
             {estaLikeado ? "Quitar like" : "Dar like"}
           </Text>
         </Pressable>
+
+        <Pressable onPress={() => navigation.navigate('ComentarPosteo', { postId: item.id })} style={[styles.button, styles.buttonComment]}>
+          <Text style={styles.buttonText}>Comentar</Text>
+        </Pressable>
       </View>
     );
   }
@@ -115,6 +119,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     marginTop: 5
+  },
+  buttonComment: {
+    backgroundColor: "#555",
+    marginTop: 8,
   },
   buttonText: {
     color: "#fff",

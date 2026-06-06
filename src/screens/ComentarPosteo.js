@@ -35,19 +35,21 @@ function ComentarPosteo({ route }) {
         <View style={styles.container}>
             <Text style={styles.title}>Comentarios</Text>
 
-            <FlatList
-                data={comentarios}
-                keyExtractor={item => item.id}
-                style={{ flex: 1, width: '100%' }}
-                ListEmptyComponent={<Text style={styles.empty}>Sé el primero en comentar.</Text>}
-                renderItem={({ item }) => (
-                    <View style={styles.comentario}>
-                        <Text style={styles.owner}>{item.data.owner}</Text>
-                        <Text style={styles.text}>{item.data.text}</Text>
-                    
-                    </View>
-                )}
-            />
+            {comentarios.length === 0 ? (
+                <Text style={styles.empty}>Sé el primero en comentar.</Text>
+            ) : (
+                <FlatList
+                    data={comentarios}
+                    keyExtractor={item => item.id}
+                    style={{ flex: 1, width: '100%' }}
+                    renderItem={({ item }) => (
+                        <View style={styles.comentario}>
+                            <Text style={styles.owner}>{item.data.owner}</Text>
+                            <Text style={styles.text}>{item.data.text}</Text>
+                        </View>
+                    )}
+                />
+            )}
 
             <View style={styles.inputRow}>
                 <TextInput

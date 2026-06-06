@@ -42,7 +42,6 @@ function CreatePost({ navigation }) {
         placeholder="¿Qué estás pensando?"
         value={description}
         onChangeText={(text) => setDescription(text)}
-        multiline={true}
       />
 
       <TextInput

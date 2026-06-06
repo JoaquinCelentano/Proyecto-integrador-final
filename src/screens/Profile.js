@@ -53,6 +53,8 @@ function Profile({ navigation }) {
 
             {loading ? (
                 <ActivityIndicator size="large" color="#111" style={{ marginTop: 20 }} />
+            ) : posts.length === 0 ? (
+                <Text style={styles.empty}>Todavía no publicaste nada.</Text>
             ) : (
                 <FlatList
                     data={posts}
@@ -64,7 +66,6 @@ function Profile({ navigation }) {
                             <Text style={styles.postMeta}>{item.data.likes.length} likes</Text>
                         </View>
                     )}
-                    ListEmptyComponent={<Text style={styles.empty}>Todavía no publicaste nada.</Text>}
                 />
             )}
 

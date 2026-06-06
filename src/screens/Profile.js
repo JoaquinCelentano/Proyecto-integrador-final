@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet, Image, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { auth, db } from '../firebase/Config';
 
 function Profile({ navigation }) {
@@ -29,45 +29,48 @@ function Profile({ navigation }) {
 
     function logout() {
         auth.signOut()
-            .then(() => {
-                navigation.navigate('Login');
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+            .then(() => { navigation.navigate('Login'); })
+            .catch((error) => { console.log(error); });
     }
 
     return (
         <View style={styles.container}>
-            <Image source={require('../../assets/DHboxd.png')} style={styles.logo} />
-            <Text style={styles.title}>Mi Perfil</Text>
+            <Text style={styles.appName}>DHboxd</Text>
 
-            <Text style={styles.label}>Email</Text>
-            <Text style={styles.value}>{auth.currentUser.email}</Text>
+            <View style={styles.header}>
+                <View style={styles.avatar}>
+                    <Text style={styles.avatarText}>
+                        {userName ? userName[0].toUpperCase() : '?'}
+                    </Text>
+                </View>
+                <View style={styles.headerInfo}>
+                    <Text style={styles.userName}>{userName || '—'}</Text>
+                    <Text style={styles.email}>{auth.currentUser.email}</Text>
+                </View>
+            </View>
 
-            <Text style={styles.label}>Nombre de usuario</Text>
-            <Text style={styles.value}>{userName}</Text>
-
-            <Pressable style={styles.button} onPress={logout}>
-                <Text style={styles.buttonText}>Cerrar sesión</Text>
-            </Pressable>
-
-            <Text style={styles.postsTitle}>Mis posteos</Text>
+            <Text style={styles.sectionTitle}>Mis posteos</Text>
 
             {loading ? (
-                <ActivityIndicator size="large" color="#222" />
+                <ActivityIndicator size="large" color="#111" style={{ marginTop: 20 }} />
             ) : (
                 <FlatList
                     data={posts}
                     keyExtractor={item => item.id}
-                    style={{ width: '100%', flex: 1 }}
+                    style={{ flex: 1, width: '100%' }}
                     renderItem={({ item }) => (
                         <View style={styles.post}>
                             <Text style={styles.postText}>{item.data.description}</Text>
+                            <Text style={styles.postMeta}>{item.data.likes.length} likes</Text>
                         </View>
                     )}
+                    ListEmptyComponent={<Text style={styles.empty}>Todavía no publicaste nada.</Text>}
                 />
             )}
+
+            <Pressable style={styles.logoutButton} onPress={logout}>
+                <Text style={styles.logoutText}>Cerrar sesión</Text>
+            </Pressable>
         </View>
     );
 }
@@ -75,58 +78,87 @@ function Profile({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
         backgroundColor: '#fff',
+        paddingHorizontal: 20,
     },
-    logo: {
-        width: 140,
-        height: 44,
-        resizeMode: 'contain',
-        marginTop: 40,
-        marginBottom: 4,
+    appName: {
+        fontSize: 22,
+        fontWeight: '800',
+        color: '#111',
+        marginTop: 52,
+        marginBottom: 24,
+        letterSpacing: -0.5,
     },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginBottom: 30,
-        marginTop: 10,
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 28,
+        paddingBottom: 24,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
     },
-    label: {
-        fontSize: 12,
-        color: '#999',
-        marginTop: 20,
+    avatar: {
+        width: 56,
+        height: 56,
+        borderRadius: 28,
+        backgroundColor: '#111',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 16,
     },
-    value: {
-        fontSize: 16,
-        marginTop: 4,
-    },
-    button: {
-        backgroundColor: '#222',
-        padding: 15,
-        borderRadius: 8,
-        marginTop: 30,
-    },
-    buttonText: {
+    avatarText: {
         color: '#fff',
-        textAlign: 'center',
-        fontWeight: 'bold',
+        fontSize: 22,
+        fontWeight: '700',
     },
-    postsTitle: {
+    headerInfo: {
+        flex: 1,
+    },
+    userName: {
         fontSize: 18,
-        fontWeight: 'bold',
-        marginTop: 30,
-        marginBottom: 10,
+        fontWeight: '700',
+        color: '#111',
+        marginBottom: 2,
+    },
+    email: {
+        fontSize: 13,
+        color: '#999',
+    },
+    sectionTitle: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: '#999',
+        letterSpacing: 1,
+        textTransform: 'uppercase',
+        marginBottom: 12,
     },
     post: {
-        borderWidth: 1,
-        borderColor: '#e0e0e0',
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 10,
+        paddingVertical: 14,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
     },
     postText: {
         fontSize: 15,
         color: '#111',
+        marginBottom: 4,
+    },
+    postMeta: {
+        fontSize: 12,
+        color: '#bbb',
+    },
+    empty: {
+        color: '#bbb',
+        fontSize: 14,
+        marginTop: 20,
+    },
+    logoutButton: {
+        paddingVertical: 16,
+        alignItems: 'center',
+        marginVertical: 16,
+    },
+    logoutText: {
+        fontSize: 14,
+        color: '#999',
     },
 });
 

@@ -13,10 +13,7 @@ function ComentarPosteo({ route }) {
             .onSnapshot(docs => {
                 let lista = [];
                 docs.forEach(doc => {
-                    lista.push({
-                        id: doc.id,
-                        data: doc.data()
-                    });
+                    lista.push({ id: doc.id, data: doc.data() });
                 });
                 setComentarios(lista);
             });
@@ -24,16 +21,13 @@ function ComentarPosteo({ route }) {
 
     function agregarComentario() {
         if (comentario === "") return;
-
         db.collection('comments').add({
             postId: postId,
             text: comentario,
             owner: auth.currentUser.email,
             createdAt: Date.now(),
         })
-        .then(() => {
-            setComentario("");
-        })
+        .then(() => { setComentario(""); })
         .catch(e => console.log(e));
     }
 
@@ -44,25 +38,28 @@ function ComentarPosteo({ route }) {
             <FlatList
                 data={comentarios}
                 keyExtractor={item => item.id}
-                style={{ width: '100%', flex: 1 }}
+                style={{ flex: 1, width: '100%' }}
+                ListEmptyComponent={<Text style={styles.empty}>Sé el primero en comentar.</Text>}
                 renderItem={({ item }) => (
                     <View style={styles.comentario}>
                         <Text style={styles.owner}>{item.data.owner}</Text>
                         <Text style={styles.text}>{item.data.text}</Text>
+                    
                     </View>
                 )}
             />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Escribí un comentario..."
-                value={comentario}
-                onChangeText={text => setComentario(text)}
-            />
-
-            <Pressable style={styles.button} onPress={() => agregarComentario()}>
-                <Text style={styles.buttonText}>Comentar</Text>
-            </Pressable>
+            <View style={styles.inputRow}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Escribí un comentario..."
+                    value={comentario}
+                    onChangeText={text => setComentario(text)}
+                />
+                <Pressable style={styles.sendButton} onPress={() => agregarComentario()}>
+                    <Text style={styles.sendText}>→</Text>
+                </Pressable>
+            </View>
         </View>
     );
 }
@@ -70,45 +67,73 @@ function ComentarPosteo({ route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
         backgroundColor: '#fff',
+        paddingTop: 50,
     },
     title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        marginTop: 10,
+        fontSize: 22,
+        fontWeight: '700',
+        color: '#111',
+        paddingHorizontal: 20,
+        marginBottom: 12,
+        paddingBottom: 14,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+    empty: {
+        color: '#888',
+        fontSize: 14,
+        textAlign: 'center',
+        marginTop: 40,
     },
     comentario: {
-        borderWidth: 1,
-        borderColor: '#e0e0e0',
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 10,
+        paddingHorizontal: 20,
+        paddingVertical: 14,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
     },
     owner: {
-        fontWeight: 'bold',
+        fontSize: 13,
+        fontWeight: '600',
+        color: '#888',
         marginBottom: 4,
     },
     text: {
         fontSize: 15,
+        color: '#111',
+    },
+    inputRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderTopWidth: 1,
+        borderTopColor: '#eee',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        backgroundColor: '#fff',
     },
     input: {
+        flex: 1,
         borderWidth: 1,
-        borderColor: '#999',
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 10,
+        borderColor: '#eee',
+        borderRadius: 20,
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        fontSize: 15,
+        backgroundColor: '#fafafa',
+        marginRight: 10,
     },
-    button: {
-        backgroundColor: '#222',
-        padding: 15,
-        borderRadius: 8,
+    sendButton: {
+        backgroundColor: '#111',
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    buttonText: {
+    sendText: {
         color: '#fff',
-        textAlign: 'center',
-        fontWeight: 'bold',
+        fontSize: 18,
+        fontWeight: '600',
     },
 });
 

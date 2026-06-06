@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, FlatList, Pressable, StyleSheet } from "react-native";
+import { View, Text, FlatList, Pressable, StyleSheet, Image } from "react-native";
 import { auth, db } from "../firebase/Config";
 
 function Home({ navigation }) {
@@ -10,14 +10,9 @@ function Home({ navigation }) {
       .orderBy("createdAt", "desc")
       .onSnapshot((docs) => {
         let posteos = [];
-
         docs.forEach((doc) => {
-          posteos.push({
-            id: doc.id,
-            data: doc.data()
-          });
+          posteos.push({ id: doc.id, data: doc.data() });
         });
-
         setPosts(posteos);
       });
   }, []);
@@ -25,19 +20,14 @@ function Home({ navigation }) {
   function likePost(post) {
     let emailUsuario = auth.currentUser.email;
     let likes = post.data.likes;
-
     if (likes.includes(emailUsuario)) {
-      db.collection("posts")
-        .doc(post.id)
-        .update({
-          likes: likes.filter((email) => email !== emailUsuario)
-        });
+      db.collection("posts").doc(post.id).update({
+        likes: likes.filter((email) => email !== emailUsuario)
+      });
     } else {
-      db.collection("posts")
-        .doc(post.id)
-        .update({
-          likes: likes.concat(emailUsuario)
-        });
+      db.collection("posts").doc(post.id).update({
+        likes: likes.concat(emailUsuario)
+      });
     }
   }
 
@@ -46,39 +36,47 @@ function Home({ navigation }) {
     let estaLikeado = item.data.likes.includes(emailUsuario);
 
     return (
-      <View style={styles.post}>
+      <Pressable
+        style={styles.post}
+        onPress={() => navigation.navigate('PostDetail', { post: item })}
+      >
         <Text style={styles.owner}>{item.data.owner}</Text>
-
         <Text style={styles.description}>{item.data.description}</Text>
-
-        <Text style={styles.likes}>
-          Likes: {item.data.likes.length}
-        </Text>
-
-        <Pressable onPress={() => likePost(item)} style={styles.button}>
-          <Text style={styles.buttonText}>
-            {estaLikeado ? "Quitar like" : "Dar like"}
-          </Text>
-        </Pressable>
-
-        <Pressable onPress={() => navigation.navigate('ComentarPosteo', { postId: item.id })} style={[styles.button, styles.buttonComment]}>
-          <Text style={styles.buttonText}>Comentar</Text>
-        </Pressable>
-      </View>
+        {item.data.imageUrl ? (
+          <Image source={{ uri: item.data.imageUrl }} style={styles.image} />
+        ) : null}
+        <Text style={styles.likes}>{item.data.likes.length} likes</Text>
+        <View style={styles.actions}>
+          <Pressable
+            onPress={() => likePost(item)}
+            style={estaLikeado ? styles.buttonFilled : styles.buttonOutline}
+          >
+            <Text style={estaLikeado ? styles.buttonTextFilled : styles.buttonTextOutline}>
+              {estaLikeado ? "Me gusta ✓" : "Me gusta"}
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => navigation.navigate('ComentarPosteo', { postId: item.id })}
+            style={styles.buttonOutline}
+          >
+            <Text style={styles.buttonTextOutline}>Comentar</Text>
+          </Pressable>
+        </View>
+      </Pressable>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home</Text>
-
+      <Text style={styles.title}>DHboxd</Text>
       {posts.length === 0 ? (
-        <Text>No hay posteos todavía.</Text>
+        <Text style={styles.empty}>No hay posteos todavía.</Text>
       ) : (
         <FlatList
           data={posts}
           keyExtractor={(item) => item.id}
           renderItem={renderPost}
+          style={{ width: '100%', flex: 1 }}
         />
       )}
     </View>
@@ -88,46 +86,83 @@ function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
   title: {
-    fontSize: 30,
+    fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 20
+    color: "#111",
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    paddingBottom: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  empty: {
+    textAlign: "center",
+    color: "#888",
+    marginTop: 60,
+    fontSize: 15,
   },
   post: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15
+    paddingHorizontal: 20,
+    paddingVertical: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
   },
   owner: {
-    fontWeight: "bold",
-    marginBottom: 10
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#888",
+    marginBottom: 6,
   },
   description: {
-    fontSize: 16,
-    marginBottom: 10
+    fontSize: 15,
+    color: "#111",
+    lineHeight: 22,
+    marginBottom: 12,
+  },
+  image: {
+    width: "100%",
+    height: 220,
+    borderRadius: 10,
+    marginBottom: 12,
+    resizeMode: "cover",
   },
   likes: {
-    marginBottom: 10
+    fontSize: 13,
+    color: "#888",
+    marginBottom: 12,
   },
-  button: {
-    backgroundColor: "#222",
-    padding: 10,
+  actions: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  buttonOutline: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ddd",
     borderRadius: 8,
-    marginTop: 5
+    paddingVertical: 8,
+    alignItems: "center",
   },
-  buttonComment: {
-    backgroundColor: "#555",
-    marginTop: 8,
+  buttonFilled: {
+    flex: 1,
+    backgroundColor: "#111",
+    borderRadius: 8,
+    paddingVertical: 8,
+    alignItems: "center",
   },
-  buttonText: {
+  buttonTextOutline: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#111",
+  },
+  buttonTextFilled: {
+    fontSize: 13,
+    fontWeight: "600",
     color: "#fff",
-    textAlign: "center"
-  }
+  },
 });
 
 export default Home;

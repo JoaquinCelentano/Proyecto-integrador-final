@@ -4,6 +4,7 @@ import { auth, db } from "../firebase/Config";
 
 function Home({ navigation }) {
   const [posts, setPosts] = useState([]);
+  const [usuarios, setUsuarios] = useState({});
 
   useEffect(() => {
     const unsubscribe = db
@@ -24,6 +25,29 @@ function Home({ navigation }) {
 
     return () => unsubscribe();
   }, []);
+
+useEffect(() => {
+  if (posts.length === 0) return;
+
+  const emails = [...new Set(posts.map(p => p.data.owner))];
+  console.log('emails:', emails);
+
+  emails.forEach(email => {
+    db.collection('users')
+      .where('email', '==', email)
+      .onSnapshot(snapshot => {
+        console.log('snapshot size:', snapshot.size);
+        if (!snapshot.empty) {
+          const data = snapshot.docs[0].data();
+          console.log('userName encontrado:', data.userName);
+          setUsuarios(prev => ({
+            ...prev,
+            [email]: data.userName || ''
+          }));
+        }
+      });
+  });
+}, [posts]);
 
   function likePost(post) {
     let emailUsuario = auth.currentUser.email;
@@ -80,7 +104,7 @@ function Home({ navigation }) {
             navigation.navigate("UserProfile", { email: item.data.owner })
           }
         >
-          <Text style={styles.owner}>{item.data.owner}</Text>
+          <Text style={styles.owner}>{usuarios[item.data.owner]}</Text>
           
         </Pressable>
         <Text style={styles.date}>

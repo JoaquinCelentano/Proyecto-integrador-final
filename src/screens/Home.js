@@ -124,10 +124,10 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 220,
+    height: 300,
     borderRadius: 10,
     marginBottom: 12,
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
   likes: {
     fontSize: 13,

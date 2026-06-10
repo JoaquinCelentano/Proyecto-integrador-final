@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome } from '@expo/vector-icons';
 import NavegacionStack from './NavegacionStack';
 import CreatePost from '../screens/CreatePost';
-import Profile from '../screens/Profile';
+import PerfilStack from './PerfilStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,7 +30,7 @@ function TabNavigation() {
             />
             <Tab.Screen
                 name="Mi Perfil"
-                component={Profile}
+                component={PerfilStack}
                 options={{ headerShown: false, tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color={color} /> }}
             />
         </Tab.Navigator>

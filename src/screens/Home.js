@@ -40,7 +40,9 @@ function Home({ navigation }) {
         style={styles.post}
         onPress={() => navigation.navigate('PostDetail', { post: item })}
       >
-        <Text style={styles.owner}>{item.data.owner}</Text>
+        <Pressable onPress={() => navigation.navigate('UserProfile', { email: item.data.owner })}>
+          <Text style={styles.owner}>{item.data.owner}</Text>
+        </Pressable>
         <Text style={styles.description}>{item.data.description}</Text>
         {item.data.imageUrl ? (
           <Image source={{ uri: item.data.imageUrl }} style={styles.image} />

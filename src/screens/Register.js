@@ -9,18 +9,28 @@ function Register(props) {
     const [loginError, setLoginError] = useState("");
 
     function onSubmit() {
-        setLoginError("");
-        auth.createUserWithEmailAndPassword(email, password)
-            .then(() => {
-                db.collection('users').add({
-                    userName: userName,
-                    email: email,
-                    createdAt: Date.now(),
-                })
-                .then(() => props.navigation.navigate('Login'))
+    setLoginError("");
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+            db.collection('users').add({
+                userName: userName,
+                email: email,
+                createdAt: Date.now(),
             })
-            .catch(() => { setLoginError('Credenciales invalidas'); });
-    }
+            .then(() => props.navigation.navigate('Login'))
+        })
+        .catch((error) => {
+            if (error.code === 'auth/invalid-email') {
+                setLoginError('El email no tiene un formato válido.');
+            } else if (error.code === 'auth/weak-password') {
+                setLoginError('La contraseña debe tener al menos 6 caracteres.');
+            } else if (error.code === 'auth/email-already-in-use') {
+                setLoginError('Ese email ya está registrado.');
+            } else {
+                setLoginError('Error al crear la cuenta. Intentá de nuevo.');
+            }
+        });
+}
 
     return (
         <View style={styles.container}>

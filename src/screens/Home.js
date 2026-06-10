@@ -44,6 +44,27 @@ function Home({ navigation }) {
     }
   }
 
+  function formatearFecha(fecha) {
+  if (!fecha) {
+    return "Sin fecha";
+  }
+
+  let fechaConvertida;
+
+  if (fecha.toDate) {
+    fechaConvertida = fecha.toDate();
+  } else {
+    fechaConvertida = new Date(fecha);
+  }
+
+  return fechaConvertida.toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
   function renderPost({ item }) {
     let emailUsuario = auth.currentUser.email;
     let likes = item.data.likes ? item.data.likes : [];
@@ -60,8 +81,11 @@ function Home({ navigation }) {
           }
         >
           <Text style={styles.owner}>{item.data.owner}</Text>
+          
         </Pressable>
-
+        <Text style={styles.date}>
+          {formatearFecha(item.data.createdAt)}
+        </Text>
         <Text style={styles.description}>{item.data.description}</Text>
 
         {item.data.imageUrl ? (
@@ -197,6 +221,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#fff",
   },
+  date: {
+  fontSize: 12,
+  color: "#aaa",
+  marginBottom: 8,
+},
 });
 
 export default Home;

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
 import { auth, db } from "../firebase/Config";
-import Camara from "../components/camara";
+import Camara from "../components/Camara";
 
 function CreatePost({ navigation }) {
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState("");
+  const [photoUri, setPhotoUri] = useState(null);
 
   function publicarPost() {
     setError("");
@@ -21,7 +22,7 @@ function CreatePost({ navigation }) {
         owner: auth.currentUser.email,
         createdAt: new Date(),
         likes: [],
-        comments: []
+        comments: [],
       })
       .then(() => {
         setDescription("");
@@ -35,29 +36,38 @@ function CreatePost({ navigation }) {
   }
 
   return (
+    <View>
+      {
+  photoUri === null ? 
+    <camara setPhotoUri={(uri) => setPhotoUri(uri)} />
+    : 
+  
     <View style={styles.container}>
-      <Text style={styles.title}>Nuevo posteo</Text>
-
-      <TextInput
-        style={styles.inputMultiline}
-        placeholder="¿Qué estás pensando?"
-        value={description}
-        onChangeText={(text) => setDescription(text)}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="URL de la imagen (opcional)"
-        value={imageUrl}
-        onChangeText={(text) => setImageUrl(text)}
-      />
-
-      {error !== "" ? <Text style={styles.error}>{error}</Text> : null}
-
-      <Pressable style={styles.button} onPress={() => publicarPost()}>
-        <Text style={styles.buttonText}>Publicar</Text>
-      </Pressable>
+        <Text style={styles.title}>Nuevo posteo</Text>
+  
+        <TextInput
+          style={styles.inputMultiline}
+          placeholder="¿Qué estás pensando?"
+          value={description}
+          onChangeText={(text) => setDescription(text)}
+        />
+  
+        <TextInput
+          style={styles.input}
+          placeholder="URL de la imagen (opcional)"
+          value={imageUrl}
+          onChangeText={(text) => setImageUrl(text)}
+        />
+  
+        {error !== "" ? <Text style={styles.error}>{error}</Text> : null}
+  
+        <Pressable style={styles.button} onPress={() => publicarPost()}>
+          <Text style={styles.buttonText}>Publicar</Text>
+        </Pressable>
+      </View>
+  }
     </View>
+  
   );
 }
 

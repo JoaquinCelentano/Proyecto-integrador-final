@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
 import { auth, db } from "../firebase/Config";
+import Camara from "../components/camara";
 
 function CreatePost({ navigation }) {
   const [description, setDescription] = useState("");

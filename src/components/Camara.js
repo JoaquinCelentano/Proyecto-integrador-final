@@ -16,6 +16,14 @@ function Camara({setPhotoUri}) {
             .catch(() => setPermisos(false));
     }, []);
 
+    function savePhoto() {
+        setPhotoUri(uri);
+    }
+
+    function clearPhoto() {
+        setUri(null);
+    }
+
     function takePicture() {
         metodosCamara.current.takePictureAsync()
         .then((imgTemp) => {

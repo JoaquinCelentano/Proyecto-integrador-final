@@ -8,11 +8,11 @@ function Home({ navigation }) {
 
   useEffect(() => {
     db.collection("users").get().then((docs) => {
-      let usersArr = [];
+      let usersLista = [];
       docs.forEach((doc) => {
-        usersArr.push(doc.data());
+        usersLista.push(doc.data());
       });
-      setUsers(usersArr);
+      setUsers(usersLista);
     });
   }, []);
 

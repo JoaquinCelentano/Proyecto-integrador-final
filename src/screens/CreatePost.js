@@ -48,7 +48,7 @@ function CreatePost({ navigation }) {
         <Camara setPhotoUri={(uri) => setPhotoUri(uri)} />
       ) : (
         <View>
-          <Image source={{ uri: photoUri }} style={styles.preview} />
+          <Image source={{uri: `data:image/jpeg;base64,${photoUri}`}} style={styles.preview} />
           
 
           <TextInput
@@ -58,13 +58,17 @@ function CreatePost({ navigation }) {
             onChangeText={(text) => setDescription(text)}
           />
 
+        {photoUri === null ? 
+
           <TextInput
             style={styles.input}
             placeholder="URL de la imagen (opcional)"
             value={imageUrl}
             onChangeText={(text) => setImageUrl(text)}
           />
+          : null
 
+        }
           <Pressable style={styles.buttonSecondary} onPress={() => setPhotoUri(null)}>
             <Text style={styles.buttonSecondaryText}>Sacar otra foto</Text>
           </Pressable>
@@ -85,17 +89,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 24,
     backgroundColor: "#fff",
-    paddingTop: 50
+    paddingTop: 30
   },
   title: {
-    fontSize: 26,
+    fontSize: 30,
     fontWeight: "bold",
     color: "#111",
     marginBottom: 28
   },
   preview: {
-    width: "100%",
-    height: 260,
+    width: 150,
+    height: 150,
     borderRadius: 10,
     marginBottom: 16,
     resizeMode: "cover"

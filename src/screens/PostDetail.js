@@ -24,7 +24,7 @@ function PostDetail({ route }) {
                 <Text style={styles.owner}>{post.data.owner}</Text>
                 <Text style={styles.description}>{post.data.description}</Text>
                 {post.data.imageUrl ? (
-                    <Image source={{ uri: post.data.imageUrl }} style={styles.image} />
+                    <Image source={{ uri: `data:image/jpeg;base64,${post.data.imageUrl}` }} style={styles.image} />
                 ) : null}
                 <Text style={styles.likes}>{post.data.likes.length} likes</Text>
                 <Text style={styles.subtitle}>Comentarios</Text>

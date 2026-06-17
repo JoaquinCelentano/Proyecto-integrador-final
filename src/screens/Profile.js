@@ -14,7 +14,7 @@ function Profile({ navigation }) {
 
     useEffect(() => {
         db.collection('users')
-            .where('email', '==', auth.currentUser.email)
+            .where('email', '==', auth.currentUser ? auth.currentUser.email : '')
             .onSnapshot(snapshot => {
                 if (!snapshot.empty) {
                     setUserName(snapshot.docs[0].data().userName);
@@ -28,7 +28,7 @@ function Profile({ navigation }) {
 
     useEffect(() => {
         db.collection('posts')
-            .where('owner', '==', auth.currentUser.email)
+            .where('owner', '==', auth.currentUser ? auth.currentUser.email : '')
             .onSnapshot(snapshot => {
                 const myPosts = snapshot.docs.map(doc => ({ id: doc.id, data: doc.data() }));
                 setPosts(myPosts);
@@ -58,7 +58,7 @@ function Profile({ navigation }) {
                 )}
                 <View style={styles.headerInfo}>
                     <Text style={styles.userName}>{userName || '—'}</Text>
-                    <Text style={styles.email}>{auth.currentUser.email}</Text>
+                    <Text style={styles.email}>{auth.currentUser ? auth.currentUser.email : ''}</Text>
                 </View>
             </View>
 

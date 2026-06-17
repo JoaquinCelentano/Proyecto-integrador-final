@@ -4,50 +4,32 @@ import { auth, db } from "../firebase/Config";
 
 function Home({ navigation }) {
   const [posts, setPosts] = useState([]);
-  const [usuarios, setUsuarios] = useState({});
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = db
-      .collection("posts")
-      .orderBy("createdAt", "desc")
-      .onSnapshot((docs) => {
-        let posteos = [];
-
-        docs.forEach((doc) => {
-          posteos.push({
-            id: doc.id,
-            data: doc.data(),
-          });
-        });
-
-        setPosts(posteos);
+    db.collection("users").get().then((docs) => {
+      let usersArr = [];
+      docs.forEach((doc) => {
+        usersArr.push(doc.data());
       });
-
-    return () => unsubscribe();
+      setUsers(usersArr);
+    });
   }, []);
 
-useEffect(() => {
-  if (posts.length === 0) return;
-
-  const emails = [...new Set(posts.map(p => p.data.owner))];
-  console.log('emails:', emails);
-
-  emails.forEach(email => {
-    db.collection('users')
-      .where('email', '==', email)
-      .onSnapshot(snapshot => {
-        console.log('snapshot size:', snapshot.size);
-        if (!snapshot.empty) {
-          const data = snapshot.docs[0].data();
-          console.log('userName encontrado:', data.userName);
-          setUsuarios(prev => ({
-            ...prev,
-            [email]: data.userName || ''
-          }));
-        }
+  useEffect(() => {
+    db.collection("posts").orderBy("createdAt", "desc").get().then((docs) => {
+      let posteos = [];
+      docs.forEach((doc) => {
+        let user = users.find((user) => user.email === doc.data().owner);
+        posteos.push({
+          id: doc.id,
+          data: doc.data(),
+          user: user,
+        });
       });
-  });
-}, [posts]);
+      setPosts(posteos);
+    });
+  }, [users]);
 
   function likePost(post) {
     let emailUsuario = auth.currentUser.email;
@@ -90,7 +72,7 @@ useEffect(() => {
   });
 }
   function renderPost({ item }) {
-    let emailUsuario = auth.currentUser.email;
+    let emailUsuario = auth.currentUser ? auth.currentUser.email : '';
     let likes = item.data.likes ? item.data.likes : [];
     let estaLikeado = likes.includes(emailUsuario);
 
@@ -100,12 +82,21 @@ useEffect(() => {
         onPress={() => navigation.navigate("PostDetail", { post: item })}
       >
         <Pressable
+          style={styles.ownerRow}
           onPress={() =>
             navigation.navigate("UserProfile", { email: item.data.owner })
           }
         >
-          <Text style={styles.owner}>{usuarios[item.data.owner]}</Text>
-          
+          {item.user && item.user.profilePic ? (
+            <Image source={{ uri: item.user.profilePic }} style={styles.avatar} />
+          ) : (
+            <View style={styles.avatarPlaceholder}>
+              <Text style={styles.avatarLetter}>
+                {item.user && item.user.userName ? item.user.userName[0].toUpperCase() : "?"}
+              </Text>
+            </View>
+          )}
+          <Text style={styles.owner}>{item.user ? item.user.userName : item.data.owner}</Text>
         </Pressable>
         <Text style={styles.date}>
           {formatearFecha(item.data.createdAt)}
@@ -192,11 +183,35 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
   },
+  ownerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 6,
+  },
+  avatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginRight: 8,
+  },
+  avatarPlaceholder: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#ddd",
+    marginRight: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarLetter: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#555",
+  },
   owner: {
     fontSize: 13,
     fontWeight: "600",
     color: "#888",
-    marginBottom: 6,
   },
   description: {
     fontSize: 15,

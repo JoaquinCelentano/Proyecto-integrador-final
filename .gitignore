@@ -39,8 +39,3 @@ yarn-error.*
 # generated native folders
 /ios
 /android
-
-# other stuff (fede usa un IDE que por default viene .idea/ entre otras cosas)
-.idea/
-consigna/
-slides/

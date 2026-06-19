@@ -6,6 +6,12 @@ function PostDetail({ route }) {
     const post = route.params.post;
     const [comentarios, setComentarios] = useState([]);
 
+    let imageUri =
+        post.data.imageUrl &&
+        (post.data.imageUrl.startsWith("http") || post.data.imageUrl.startsWith("data:"))
+            ? post.data.imageUrl
+            : `data:image/jpeg;base64,${post.data.imageUrl}`;
+
     useEffect(() => {
         db.collection('comments')
             .where('postId', '==', post.id)
@@ -24,7 +30,7 @@ function PostDetail({ route }) {
                 <Text style={styles.owner}>{post.data.owner}</Text>
                 <Text style={styles.description}>{post.data.description}</Text>
                 {post.data.imageUrl ? (
-                    <Image source={{ uri: `data:image/jpeg;base64,${post.data.imageUrl}` }} style={styles.image} />
+                    <Image source={{ uri: imageUri }} style={styles.image} />
                 ) : null}
                 <Text style={styles.likes}>{post.data.likes.length} likes</Text>
                 <Text style={styles.subtitle}>Comentarios</Text>

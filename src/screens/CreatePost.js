@@ -17,7 +17,7 @@ function CreatePost({ navigation }) {
       return;
     }
 
-    const imagenFinal = photoUri !== null ? photoUri : imageUrl;
+    const imagenFinal = photoUri !== null ? `data:image/jpeg;base64,${photoUri}` : imageUrl;
 
     db.collection("posts")
       .add({
@@ -44,42 +44,40 @@ function CreatePost({ navigation }) {
     <View style={styles.container}>
       <Text style={styles.title}>Nuevo posteo</Text>
 
+      <TextInput
+        style={styles.inputMultiline}
+        placeholder="Que estas pensando?"
+        value={description}
+        onChangeText={(text) => setDescription(text)}
+        multiline
+      />
+
       {photoUri === null ? (
-        <Camara setPhotoUri={(uri) => setPhotoUri(uri)} />
-      ) : (
         <View>
-          <Image source={{uri: `data:image/jpeg;base64,${photoUri}`}} style={styles.preview} />
-          
-
-          <TextInput
-            style={styles.inputMultiline}
-            placeholder="Que estas pensando?"
-            value={description}
-            onChangeText={(text) => setDescription(text)}
-          />
-
-        {photoUri === null ? 
-
           <TextInput
             style={styles.input}
             placeholder="URL de la imagen (opcional)"
             value={imageUrl}
             onChangeText={(text) => setImageUrl(text)}
           />
-          : null
 
-        }
+          <Camara setPhotoUri={(uri) => setPhotoUri(uri)} />
+        </View>
+      ) : (
+        <View>
+          <Image source={{uri: `data:image/jpeg;base64,${photoUri}`}} style={styles.preview} />
+
           <Pressable style={styles.buttonSecondary} onPress={() => setPhotoUri(null)}>
             <Text style={styles.buttonSecondaryText}>Sacar otra foto</Text>
           </Pressable>
-
-          {error !== "" ? <Text style={styles.error}>{error}</Text> : null}
-
-          <Pressable style={styles.button} onPress={() => publicarPost()}>
-            <Text style={styles.buttonText}>Publicar</Text>
-          </Pressable>
         </View>
       )}
+
+      {error !== "" ? <Text style={styles.error}>{error}</Text> : null}
+
+      <Pressable style={styles.button} onPress={() => publicarPost()}>
+        <Text style={styles.buttonText}>Publicar</Text>
+      </Pressable>
     </View>
   );
 }

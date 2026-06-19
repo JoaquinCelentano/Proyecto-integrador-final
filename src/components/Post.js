@@ -25,6 +25,12 @@ function Post({ item, navigation }) {
   let likes = item.data.likes ? item.data.likes : [];
   let estaLikeado = likes.includes(emailUsuario);
 
+  let imageUri =
+    item.data.imageUrl &&
+    (item.data.imageUrl.startsWith("http") || item.data.imageUrl.startsWith("data:"))
+      ? item.data.imageUrl
+      : `data:image/jpeg;base64,${item.data.imageUrl}`;
+
   function likePost() {
     if (likes.includes(emailUsuario)) {
       db.collection("posts")
@@ -70,7 +76,7 @@ function Post({ item, navigation }) {
       <Text style={styles.description}>{item.data.description}</Text>
 
       {item.data.imageUrl ? (
-        <Image source={{ uri: `data:image/jpeg;base64,${item.data.imageUrl}` }} style={styles.image} />
+        <Image source={{ uri: imageUri }} style={styles.image} />
       ) : null}
 
       <Text style={styles.likes}>{likes.length} likes</Text>

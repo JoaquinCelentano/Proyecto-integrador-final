@@ -8,28 +8,36 @@ function Home({ navigation }) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    db.collection("users").get().then((docs) => {
-      let usersLista = [];
-      docs.forEach((doc) => {
-        usersLista.push(doc.data());
+    db.collection("users")
+      .onSnapshot((docs) => {
+        let usersLista = [];
+
+        docs.forEach((doc) => {
+          usersLista.push(doc.data());
+        });
+
+        setUsers(usersLista);
       });
-      setUsers(usersLista);
-    });
   }, []);
 
   useEffect(() => {
-    db.collection("posts").orderBy("createdAt", "desc").get().then((docs) => {
-      let posteos = [];
-      docs.forEach((doc) => {
-        let user = users.find((user) => user.email === doc.data().owner);
-        posteos.push({
-          id: doc.id,
-          data: doc.data(),
-          user: user,
+    db.collection("posts")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((docs) => {
+        let posteos = [];
+
+        docs.forEach((doc) => {
+          let user = users.find((user) => user.email === doc.data().owner);
+
+          posteos.push({
+            id: doc.id,
+            data: doc.data(),
+            user: user,
+          });
         });
+
+        setPosts(posteos);
       });
-      setPosts(posteos);
-    });
   }, [users]);
 
   function renderPost({ item }) {
